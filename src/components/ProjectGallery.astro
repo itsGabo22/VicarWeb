@@ -1,0 +1,246 @@
+---
+const projects = [
+  {
+    title: 'Blue Velvet',
+    category: 'E-commerce Premium',
+    description:
+      'Plataforma de moda de alta gama con enfoque en la experiencia de usuario y conversiones optimizadas.',
+    image: '/src/images/Bluevelvet.jpeg',
+    tags: ['Node.js', 'Firebase', 'JS', 'UI/UX'],
+    link: 'https://bluevelvet0.com',
+  },
+  {
+    title: 'Próximamente',
+    category: 'Futuros Proyectos',
+    description:
+      'Nuevas experiencias digitales de alta gama están en camino. Este espacio pronto será ocupado por software que respira.',
+    image:
+      'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800',
+    tags: ['VICAR', 'Digital Design'],
+    isComingSoon: true,
+  },
+];
+---
+
+<section id='proyectos' class='projects'>
+  <div class='container'>
+    <div class='header'>
+      <h2 class='section-title'>
+        Casos de <span class='bg-gradient'>Éxito</span>
+      </h2>
+      <p class='section-desc'>
+        Selección de proyectos que definen el estándar VICAR.
+      </p>
+    </div>
+
+    <div class='projects-grid'>
+      {
+        projects.map((project, index) => (
+          <div
+            class={`project-card ${project.isComingSoon ? 'coming-soon' : ''}`}
+            style={`--delay: ${index * 0.2}s`}
+          >
+            <div class='image-container'>
+              <img src={project.image} alt={project.title} loading='lazy' />
+              <div class='overlay'>
+                <span class='category'>{project.category}</span>
+              </div>
+            </div>
+            <div class='card-content'>
+              <h3>{project.title}</h3>
+              <p>{project.description}</p>
+              <div class='tags'>
+                {project.tags.map((tag) => (
+                  <span>{tag}</span>
+                ))}
+              </div>
+              {project.link && (
+                <a href={project.link} target='_blank' class='project-link'>
+                  Visitar Sitio
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='16'
+                    height='16'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    stroke-width='2'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  >
+                    <path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6' />
+                    <polyline points='15 3 21 3 21 9' />
+                    <line x1='10' y1='14' x2='21' y2='3' />
+                  </svg>
+                </a>
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects {
+    padding: var(--section-padding);
+    background: #080808;
+  }
+
+  .header {
+    margin-bottom: 4rem;
+    text-align: left;
+  }
+
+  .section-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 1rem;
+  }
+
+  .bg-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-desc {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    max-width: 600px;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 3rem;
+  }
+
+  .project-card {
+    background: var(--bg-card);
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: var(--transition-smooth);
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+    animation-delay: var(--delay);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(6, 182, 212, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .coming-soon {
+    filter: grayscale(0.5);
+    opacity: 0.7;
+  }
+
+  .image-container {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+  }
+
+  .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .project-card:hover .image-container img {
+    transform: scale(1.05);
+  }
+
+  .overlay {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+  }
+
+  .category {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .card-content {
+    padding: 2.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-content h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-content p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .tags {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .tags span {
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .project-link {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    font-weight: 700;
+    transition: var(--transition-smooth);
+  }
+
+  .project-link:hover {
+    color: var(--accent-cyan);
+    gap: 0.75rem;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+    .image-container {
+      height: 250px;
+    }
+  }
+</style>

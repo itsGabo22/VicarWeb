@@ -1,0 +1,82 @@
+---
+interface Props {
+  className?: string;
+  showDevelopedBy?: boolean;
+  href?: string;
+}
+
+const { className = '', showDevelopedBy = true, href = '/' } = Astro.props;
+---
+
+<div
+  class={`vicar-branding ${className}`}
+  style='margin-top: 5px; opacity: 0.8; transition: all 0.3s; cursor: pointer;'
+>
+  <a
+    href={href}
+    target={href.startsWith('http') ? '_blank' : '_self'}
+    rel={href.startsWith('http') ? 'noopener' : ''}
+    style='text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 5px;'
+  >
+    {
+      showDevelopedBy && (
+        <span style='font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: #888;'>
+          Developed by
+        </span>
+      )
+    }
+    <svg
+      width='110'
+      height='35'
+      viewBox='0 0 320 100'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      style='max-width: 140px;'
+    >
+      <defs>
+        <linearGradient
+          id='techGradientVicarBrandFlexible'
+          x1='0'
+          y1='0'
+          x2='1'
+          y2='0'
+        >
+          <stop offset='0%' stop-color='#2563eb'></stop>
+          <stop offset='100%' stop-color='#06b6d4'></stop>
+        </linearGradient>
+      </defs>
+      <path
+        d='M15 20 L45 50 L15 80'
+        stroke='url(#techGradientVicarBrandFlexible)'
+        stroke-width='8'
+        stroke-linecap='round'
+        stroke-linejoin='round'></path>
+      <text
+        x='55'
+        y='75'
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-weight='800'
+        font-size='60'
+        fill='currentColor'
+        letter-spacing='-2'
+      >
+        VICAR
+      </text>
+      <rect
+        x='275'
+        y='20'
+        width='8'
+        height='60'
+        transform='rotate(20 275 50)'
+        fill='url(#techGradientVicarBrandFlexible)'
+        rx='4'></rect>
+    </svg>
+  </a>
+</div>
+
+<style>
+  .vicar-branding:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+</style>

@@ -1,0 +1,103 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectGallery from '../components/ProjectGallery.astro';
+import Services from '../components/Services.astro';
+import Contact from '../components/Contact.astro';
+import Logo from '../components/Logo.astro';
+---
+
+<Layout title='VICAR | Software que respira'>
+	<nav class='navbar'>
+		<div class='container nav-content'>
+			<Logo className='nav-logo' showDevelopedBy={false} href='/' />
+			<ul class='nav-links'>
+				<li><a href='#proyectos' class='hover-reveal'>Proyectos</a></li>
+				<li><a href='#servicios' class='hover-reveal'>Servicios</a></li>
+				<li><a href='#contacto' class='btn-contact'>Hablemos</a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<main>
+		<Hero />
+		<ProjectGallery />
+		<Services />
+		<Contact />
+	</main>
+
+	<footer class='footer'>
+		<div class='container footer-content'>
+			<Logo showDevelopedBy={true} href='https://github.com/itsGabo22' />
+			<p>© {new Date().getFullYear()} VICAR. Hecho para destacar.</p>
+		</div>
+	</footer>
+</Layout>
+
+<style>
+	.navbar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 100;
+		padding: 1.5rem 0;
+		background: rgba(5, 5, 5, 0.8);
+		backdrop-filter: blur(10px);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+	}
+
+	.nav-content {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.nav-links {
+		display: flex;
+		gap: 2.5rem;
+		align-items: center;
+	}
+
+	.nav-links a {
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--text-secondary);
+	}
+
+	.nav-links a:hover {
+		color: var(--text-primary);
+	}
+
+	.btn-contact {
+		background: white;
+		color: black !important;
+		padding: 0.6rem 1.2rem;
+		border-radius: 0.4rem;
+		font-weight: 700 !important;
+	}
+
+	.footer {
+		padding: 4rem 0;
+		border-top: 1px solid rgba(255, 255, 255, 0.05);
+		text-align: center;
+	}
+
+	.footer-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 2rem;
+	}
+
+	.footer p {
+		color: var(--text-secondary);
+		font-size: 0.9rem;
+	}
+
+	@media (max-width: 768px) {
+		.nav-links {
+			display: none; /* Mobile menu can be added later */
+		}
+	}
+</style>

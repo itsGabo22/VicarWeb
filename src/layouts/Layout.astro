@@ -1,0 +1,35 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'VICAR - Software que respira. Desarrollo web de alta gama y experiencias digitales optimizadas con IA.',
+} = Astro.props;
+import { ViewTransitions } from 'astro:transitions';
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang='es'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='description' content={description} />
+    <meta name='viewport' content='width=device-width' />
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+    <meta name='generator' content={Astro.generator} />
+    <title>{title}</title>
+    <ViewTransitions />
+  </head>
+  <body>
+    <slot />
+    <style is:global>
+      /* Custom cursor or global effects can go here */
+      :root {
+        view-transition-name: root;
+      }
+    </style>
+  </body>
+</html>
