@@ -519,19 +519,26 @@ const projects = [
     .projects-track {
       display: flex;
       gap: 1.5rem;
-      padding: 0 7.5vw;
-      width: max-content; /* Allow track to grow */
+      /* Calculate width to ensure it exceeds viewport for scrolling */
+      /* 2 cards at 85vw each + gap + padding = wider than 100vw */
+      width: auto;
+      padding: 0;
     }
     .carousel-wrapper {
-      width: 100%;
-      margin-left: 0;
-      padding: 2rem 0;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%); /* Full width breakout */
+      padding: 2rem 7.5vw; /* Side padding for first card centering */
       height: auto;
-      overflow-x: scroll !important; /* Force scrollability */
+      overflow-x: scroll;
+      overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
       scroll-snap-type: x mandatory;
       display: flex;
-      justify-content: flex-start; /* Align start to allow scroll */
+      justify-content: flex-start;
+      scrollbar-width: none; /* Hide scrollbar */
+    }
+    .carousel-wrapper::-webkit-scrollbar {
+      display: none; /* Hide scrollbar for webkit */
     }
 
     /* Center text on mobile */
