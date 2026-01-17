@@ -51,61 +51,78 @@ const services = [
   </div>
 </section>
 
+<!-- Vanta.js Scripts -->
+<script
+  is:inline
+  src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js'
+></script>
+<script
+  is:inline
+  src='https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js'
+></script>
+
 <script>
-  const servicesSection = document.getElementById('servicios');
-  if (servicesSection) {
-    servicesSection.addEventListener('mousemove', (e) => {
-      const rect = servicesSection.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      servicesSection.style.setProperty('--mouse-x', `${x}px`);
-      servicesSection.style.setProperty('--mouse-y', `${y}px`);
-    });
-  }
+  // Initialize Vanta Net Effect
+  // @ts-ignore
+  document.addEventListener('astro:page-load', () => {
+    // @ts-ignore
+    if (window.VANTA) {
+      // @ts-ignore
+      window.VANTA.NET({
+        el: '#servicios',
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.0,
+        minWidth: 200.0,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x2563eb, // Blue
+        backgroundColor: 0x050505, // Dark background
+        points: 12.0,
+        maxDistance: 22.0,
+        spacing: 18.0,
+      });
+    }
+  });
+
+  // Fallback for initial load
+  window.addEventListener('load', () => {
+    // @ts-ignore
+    if (window.VANTA) {
+      // @ts-ignore
+      window.VANTA.NET({
+        el: '#servicios',
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.0,
+        minWidth: 200.0,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x2563eb,
+        backgroundColor: 0x050505,
+        points: 12.0,
+        maxDistance: 22.0,
+        spacing: 18.0,
+      });
+    }
+  });
 </script>
 
 <style>
   .services {
     padding: var(--section-padding);
+    /* Background handled by Vanta.js, but keep base color */
     background: #050505;
     position: relative;
     overflow: hidden;
   }
 
-  /* Interactive Background */
-  .services::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* Tech Cubes Pattern - High Visibility */
-    /* Grid lines FIRST so they are on top */
-    background-image:
-      linear-gradient(90deg, rgba(6, 182, 212, 0.4) 1px, transparent 1px),
-      linear-gradient(rgba(6, 182, 212, 0.4) 1px, transparent 1px);
-    background-size:
-      30px 30px,
-      30px 30px;
-    background-color: #050505; /* Base color */
-    z-index: 0;
-    pointer-events: none;
-
-    /* Interactive Mask - Larger and Sharper */
-    mask-image: radial-gradient(
-      500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      black 50%,
-      transparent 100%
-    );
-    -webkit-mask-image: radial-gradient(
-      500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      black 50%,
-      transparent 100%
-    );
-
-    opacity: 1;
-    transition: opacity 0.3s;
+  /* Ensure content is above Vanta canvas */
+  .container {
+    position: relative;
+    z-index: 10;
   }
 
   .container {
@@ -115,8 +132,9 @@ const services = [
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
+    justify-items: center; /* Force center alignment */
   }
 
   .service-card {
@@ -131,27 +149,10 @@ const services = [
     overflow: hidden;
   }
 
-  .service-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(
-      800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      rgba(255, 255, 255, 0.06),
-      transparent 40%
-    );
-    opacity: 0;
-    transition: opacity 0.5s;
-    pointer-events: none;
-    z-index: 0;
-  }
+  /* Interactive Background handled by Vanta.js */
+  /* Previous ::before interactive mask removed */
 
-  .service-card:hover::after {
-    opacity: 1;
-  }
+  /* Hover effect handling cleaned up for Vanta compatibility */
 
   .service-card:hover {
     border-color: rgba(6, 182, 212, 0.3);

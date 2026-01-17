@@ -242,40 +242,52 @@ const projects = [
 
   const observer = new IntersectionObserver(
     (entries) => {
+      // Find the entry with the highest intersection ratio
+      let maxRatio = 0;
+      let activeEntry: any = null; // Forced 'any' to silence unresolved TS error
+
       entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-          const indexStr = entry.target.getAttribute('data-index');
-          if (!indexStr) return;
-
-          const index = parseInt(indexStr);
-          const type = entry.target.getAttribute('data-type');
-
-          // Update dots
-          dots.forEach((d) => d.classList.remove('active'));
-          if (dots[index]) dots[index].classList.add('active');
-
-          // Update Backgrounds
-          if (type === 'static' && bgBlueVelvet && bgWarp) {
-            bgBlueVelvet.style.opacity = '1';
-            bgWarp.style.opacity = '0';
-            stopWarp();
-            // Ensure video plays if available
-            const video = bgBlueVelvet.querySelector('video');
-            if (video) video.play();
-          } else if (type === 'warp' && bgBlueVelvet && bgWarp) {
-            bgBlueVelvet.style.opacity = '0';
-            bgWarp.style.opacity = '1';
-            startWarp();
-            // Pause video to save resources
-            const video = bgBlueVelvet.querySelector('video');
-            if (video) video.pause();
-          }
+        if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+          maxRatio = entry.intersectionRatio;
+          activeEntry = entry;
         }
       });
+
+      if (activeEntry && maxRatio > 0.5) {
+        const indexStr = activeEntry.target.getAttribute('data-index');
+        if (!indexStr) return;
+
+        const index = parseInt(indexStr);
+        const type = activeEntry.target.getAttribute('data-type');
+
+        // Update dots
+        dots.forEach((d) => d.classList.remove('active'));
+        if (dots[index]) dots[index].classList.add('active');
+
+        // Update Backgrounds
+        if (type === 'static' && bgBlueVelvet && bgWarp) {
+          bgBlueVelvet.style.opacity = '1';
+          bgWarp.style.opacity = '0';
+          stopWarp();
+          // Ensure video plays if available
+          const video = bgBlueVelvet.querySelector('video');
+          if (video) {
+            video.play().catch(() => {});
+          }
+        } else if (type === 'warp' && bgBlueVelvet && bgWarp) {
+          bgBlueVelvet.style.opacity = '0';
+          bgWarp.style.opacity = '1';
+          startWarp();
+          const video = bgBlueVelvet.querySelector('video');
+          if (video && !video.paused) {
+            video.pause();
+          }
+        }
+      }
     },
     {
       threshold: 0.6,
-      root: track, // Observe relative to scroll container
+      root: track,
     }
   );
 
@@ -438,6 +450,8 @@ const projects = [
     color: var(--text-secondary);
     font-size: 1.1rem;
     margin-bottom: 2rem;
+    /* Prevent overflow on mobile */
+    word-break: break-word;
   }
 
   .tags {
@@ -480,10 +494,20 @@ const projects = [
   }
 
   @media (max-width: 900px) {
+    .header {
+      text-align: center; /* Center title on mobile */
+    }
+    .section-title {
+      white-space: normal; /* Allow title to wrap */
+      line-height: 1.2;
+    }
     .project-card {
       flex-direction: column;
       height: auto;
       width: 85vw;
+      /* Ensure scroll snap centers it */
+      scroll-snap-align: center;
+      margin: 0 auto;
     }
     .image-container,
     .card-content {
@@ -493,11 +517,26 @@ const projects = [
       height: 200px;
     }
     .projects-track {
-      padding: 0 1rem;
+      display: flex;
+      gap: 1.5rem;
+      padding: 0 7.5vw;
+      width: max-content; /* Allow track to grow */
     }
     .carousel-wrapper {
-      height: auto;
+      width: 100%;
+      margin-left: 0;
       padding: 2rem 0;
+      height: auto;
+      overflow-x: scroll !important; /* Force scrollability */
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      display: flex;
+      justify-content: flex-start; /* Align start to allow scroll */
+    }
+
+    /* Center text on mobile */
+    .card-content h3 {
+      font-size: 1.5rem; /* Smaller font to avoid cut */
     }
   }
 </style>

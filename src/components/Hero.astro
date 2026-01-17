@@ -193,25 +193,48 @@ import Logo from './Logo.astro';
     const heroContent = document.querySelector('.hero-content') as HTMLElement;
 
     if (heroSection && heroContent) {
-      heroSection.addEventListener('mousemove', (e: any) => {
-        const { clientX, clientY } = e;
+      const updateTilt = (clientX: number, clientY: number) => {
         const { innerWidth, innerHeight } = window;
         
+        // Disable on mobile if too intense
+        if(innerWidth < 768) return;
+
         // Calculate percentage from center (-1 to 1)
         const xPos = (clientX / innerWidth - 0.5) * 2;
         const yPos = (clientY / innerHeight - 0.5) * 2;
         
-        // Tilt values - Extreme 3D Effect
-        const xOffset = yPos * 45; // Increased to 45
-        const yOffset = xPos * -45; // Increased to 45
+        // Tilt values - Extreme 3D Effect for Container
+        const xOffset = yPos * 25; 
+        const yOffset = xPos * -25;
         
+        // Separate Extreme Tilt for Title (Parallax)
+        const titleX = yPos * 50;
+        const titleY = xPos * -50;
+        const heroTitle = document.querySelector('.hero-title') as HTMLElement;
+
         requestAnimationFrame(() => {
-          heroContent.style.transform = `perspective(800px) rotateX(${xOffset}deg) rotateY(${yOffset}deg) scale3d(1.05, 1.05, 1.05)`;
+          heroContent.style.transform = `perspective(1000px) rotateX(${xOffset}deg) rotateY(${yOffset}deg)`;
+          if(heroTitle) {
+             heroTitle.style.transform = `translateZ(100px) rotateX(${titleX}deg) rotateY(${titleY}deg)`;
+          }
         });
+      };
+
+      heroSection.addEventListener('mousemove', (e: any) => {
+        updateTilt(e.clientX, e.clientY);
       });
       
+      heroSection.addEventListener('touchmove', (e: any) => {
+        if(e.touches.length > 0) {
+           // Prevent default scrolling only if needed, but here we want effect while scrolling
+           updateTilt(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+      
       heroSection.addEventListener('mouseleave', () => {
-        heroContent.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+        heroContent.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+        const heroTitle = document.querySelector('.hero-title') as HTMLElement;
+        if(heroTitle) heroTitle.style.transform = 'translateZ(100px) rotateX(0) rotateY(0)';
       });
     }
 
@@ -375,6 +398,7 @@ import Logo from './Logo.astro';
       width: 100%;
       max-width: 300px;
     }
+    /* 3D tilt is disabled via JS on mobile, no need to override CSS which breaks entry animation */
     /* Increase grid visibility on mobile to fill space */
     .cyber-grid {
       opacity: 0.5 !important; 

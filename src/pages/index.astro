@@ -97,8 +97,12 @@ import Logo from '../components/Logo.astro';
 	}
 
 	@media (max-width: 768px) {
+		.nav-links li:not(:last-child) {
+			display: none; /* Hide 'Proyectos' and 'Servicios' text links */
+		}
+		/* Contact button stays visible */
 		.nav-links {
-			display: none; /* Mobile menu can be added later */
+			gap: 0;
 		}
 	}
 </style>
