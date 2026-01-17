@@ -10,7 +10,7 @@
   --accent-cyan: #06b6d4;
   --accent-violet: #9d00ff;
   --gradient-primary: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
-  
+
   /* Spacing */
   --section-padding: 8rem 2rem;
   --container-max-width: 1200px;
@@ -23,6 +23,21 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* Global Pulse Animation */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 15px rgba(37, 99, 235, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
 }
 
 html {
@@ -38,7 +53,10 @@ body {
   line-height: 1.6;
 }
 
-h1, h2, h3, .font-syne {
+h1,
+h2,
+h3,
+.font-syne {
   font-family: 'Syne', sans-serif;
   font-weight: 800;
   line-height: 1.1;

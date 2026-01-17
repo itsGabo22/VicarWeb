@@ -10,6 +10,7 @@ const {
 } = Astro.props;
 import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
+import InteractiveBackground from '../components/InteractiveBackground.astro';
 ---
 
 <!doctype html>
@@ -24,6 +25,7 @@ import '../styles/global.css';
     <ViewTransitions />
   </head>
   <body>
+    <InteractiveBackground />
     <slot />
     <style is:global>
       /* Custom cursor or global effects can go here */
