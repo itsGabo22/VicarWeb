@@ -63,6 +63,7 @@ import Logo from './Logo.astro';
     text-align: center;
     max-width: 900px;
     transform-style: preserve-3d; /* Key for nested 3D elements */
+    will-change: transform;
   }
 
   .badge {
@@ -373,6 +374,8 @@ import Logo from './Logo.astro';
     display: flex;
     flex-direction: column;
     animation: scrollCode 8s linear infinite;
+    will-change: transform;
+    transform: translateZ(0); /* Force GPU */
   }
 
   @keyframes scrollCode {

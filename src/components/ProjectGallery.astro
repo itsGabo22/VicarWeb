@@ -145,7 +145,7 @@ const projects = [
 
   const stars: Star[] = [];
   const STAR_COUNT = 400; // More density
-  const SPEED = 25; // High speed
+  const SPEED = 12; // Lower speed for more fluidity
 
   class Star {
     x: number;
@@ -211,7 +211,7 @@ const projects = [
   function animateWarp() {
     if (!isWarpActive || !canvas || !ctx) return;
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'; // Trails
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // Smoother trails (more opacity persistence)
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     stars.forEach((star) => {
@@ -315,8 +315,9 @@ const projects = [
     height: 100%;
     z-index: 0;
     pointer-events: none;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
     opacity: 0;
+    will-change: opacity;
   }
 
   .bg-layer.active {
@@ -342,6 +343,7 @@ const projects = [
     width: 100%;
     height: 100%;
     background: black;
+    will-change: transform;
   }
 
   .content-wrapper {
@@ -543,7 +545,10 @@ const projects = [
 
     /* Center text on mobile */
     .card-content h3 {
-      font-size: 1.5rem; /* Smaller font to avoid cut */
+      font-size: clamp(1.2rem, 5vw, 1.5rem); /* Responsive fluid font size */
+      line-height: 1.2;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
   }
 </style>
