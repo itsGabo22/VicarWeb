@@ -12,28 +12,36 @@ import Logo from './Logo.astro';
       No hago webs genéricas. Construyo experiencias digitales de alta gama,
       optimizadas con IA y enfocadas en la conversión.
     </p>
-    <div class="code-visual-container">
-      <div class="code-window">
-        <div class="window-header">
-          <span class="dot red"></span>
-          <span class="dot yellow"></span>
-          <span class="dot green"></span>
+    <div class='code-visual-container'>
+      <div class='code-window'>
+        <div class='window-header'>
+          <span class='dot red'></span>
+          <span class='dot yellow'></span>
+          <span class='dot green'></span>
         </div>
-        <div class="code-content">
-          <div class="code-lines">
-            <span class="line"><span class="keyword">const</span> <span class="variable">future</span> = <span class="keyword">await</span> build({</span>
-            <span class="line">&nbsp;&nbsp;tech: <span class="string">'Astro'</span>,</span>
-            <span class="line">&nbsp;&nbsp;performance: <span class="string">'100/100'</span>,</span>
-            <span class="line">&nbsp;&nbsp;design: <span class="string">'Premium'</span></span>
-            <span class="line">});</span>
-            <span class="line"></span>
-            <span class="line"><span class="comment">// Ready to launch 🚀</span></span>
-            <span class="line"><span class="function">deploy</span>(<span class="variable">future</span>);</span>
-            <span class="line"><span class="keyword">const</span> <span class="variable">future</span> = <span class="keyword">await</span> build({</span>
-            <span class="line">&nbsp;&nbsp;tech: <span class="string">'Astro'</span>,</span>
-            <span class="line">&nbsp;&nbsp;performance: <span class="string">'100/100'</span>,</span>
-            <span class="line">&nbsp;&nbsp;design: <span class="string">'Premium'</span></span>
-            <span class="line">});</span>
+        <div class='code-content'>
+          <div class='code-lines'>
+            <span class='line'
+              ><span class='keyword'>const</span>
+              <span class='variable'>future</span> = <span class='keyword'
+                >await</span
+              > build({'{'}
+              tech: <span class='string'>'Astro'</span>, performance: <span
+                class='string'>'100/100'</span
+              >, design: <span class='string'>'Premium'</span>
+              {'}'});</span
+            >
+            <span class='line'></span>
+            <span class='line'
+              ><span class='comment'
+                >// Ready to launch, Vicar's product...</span
+              ></span
+            >
+            <span class='line'
+              ><span class='function'>deploy</span>(<span class='variable'
+                >🐐G.O.A.T 🐐</span
+              >);</span
+            >
           </div>
         </div>
       </div>
@@ -44,7 +52,106 @@ import Logo from './Logo.astro';
     <div class='glow glow-1'></div>
     <div class='glow glow-2'></div>
   </div>
+
+  <!-- 3D Grid Floor -->
+  <div class='hero-footer-visuals'>
+    <div class='cyber-grid'></div>
+    <div class='scroll-indicator'>
+      <span>Scroll</span>
+      <div class='mouse-icon'>
+        <div class='wheel'></div>
+      </div>
+    </div>
+  </div>
 </section>
+
+<script>
+  const heroSection = document.querySelector('.hero');
+  const heroContent = document.querySelector('.hero-content') as HTMLElement;
+
+  if (heroSection && heroContent) {
+    const updateTilt = (clientX: number, clientY: number) => {
+      const { innerWidth, innerHeight } = window;
+
+      if (innerWidth < 768) return;
+
+      const xPos = (clientX / innerWidth - 0.5) * 2;
+      const yPos = (clientY / innerHeight - 0.5) * 2;
+
+      const xOffset = yPos * 25;
+      const yOffset = xPos * -25;
+
+      const titleX = yPos * 50;
+      const titleY = xPos * -50;
+      const heroTitle = document.querySelector('.hero-title') as HTMLElement;
+
+      requestAnimationFrame(() => {
+        heroContent.style.transform = `perspective(1000px) rotateX(${xOffset}deg) rotateY(${yOffset}deg)`;
+        if (heroTitle) {
+          heroTitle.style.transform = `translateZ(100px) rotateX(${titleX}deg) rotateY(${titleY}deg)`;
+        }
+      });
+    };
+
+    heroSection.addEventListener('mousemove', (e: any) => {
+      updateTilt(e.clientX, e.clientY);
+    });
+
+    heroSection.addEventListener(
+      'touchmove',
+      (e: any) => {
+        if (e.touches.length > 0) {
+          updateTilt(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      },
+      { passive: true }
+    );
+
+    heroSection.addEventListener('mouseleave', () => {
+      heroContent.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+      const heroTitle = document.querySelector('.hero-title') as HTMLElement;
+      if (heroTitle)
+        heroTitle.style.transform = 'translateZ(100px) rotateX(0) rotateY(0)';
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const heroElements = document.querySelectorAll(
+      '.hero-title, .hero-subtitle, .hero-actions'
+    );
+    heroElements.forEach((el) => {
+      const element = el as HTMLElement;
+      element.style.animationPlayState = 'running';
+      element.classList.add('animate-in');
+    });
+  });
+
+  const codeVisual = document.querySelector('.code-lines') as HTMLElement;
+  if (codeVisual) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            codeVisual.style.animationPlayState = 'running';
+          } else {
+            codeVisual.style.animationPlayState = 'paused';
+          }
+        });
+      },
+      { threshold: 0 }
+    );
+    observer.observe(codeVisual);
+  }
+
+  window.addEventListener('load', () => {
+    const heroElements = document.querySelectorAll(
+      '.hero-title, .hero-subtitle, .hero-actions'
+    );
+    heroElements.forEach((el) => {
+      el.classList.add('animate-in');
+    });
+  });
+</script>
 
 <style>
   .hero {
@@ -62,7 +169,7 @@ import Logo from './Logo.astro';
     z-index: 10;
     text-align: center;
     max-width: 900px;
-    transform-style: preserve-3d; /* Key for nested 3D elements */
+    transform-style: preserve-3d;
     will-change: transform;
   }
 
@@ -77,7 +184,7 @@ import Logo from './Logo.astro';
     letter-spacing: 1px;
     margin-bottom: 2rem;
     color: var(--accent-cyan);
-    transform: translateZ(40px); /* Pop out */
+    transform: translateZ(40px);
   }
 
   .hero-title {
@@ -86,7 +193,7 @@ import Logo from './Logo.astro';
     opacity: 0;
     animation: revealText 1s cubic-bezier(0.23, 1, 0.32, 1) forwards 0.2s;
     line-height: 1.1;
-    transform: translateZ(80px); /* Significant Pop out */
+    transform: translateZ(80px);
   }
 
   .bg-gradient {
@@ -133,142 +240,6 @@ import Logo from './Logo.astro';
     box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
   }
 
-  /* Pulse Animation */
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
-    }
-    70% {
-      box-shadow: 0 0 0 15px rgba(37, 99, 235, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
-    }
-  }
-
-  .btn-primary {
-    background: var(--gradient-primary);
-    color: white;
-    animation: pulse 2s infinite;
-  }
-
-  .btn-outline:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: white;
-  }
-
-  /* Glow Effects */
-  .hero-bg-effects {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
-
-  .glow {
-    position: absolute;
-    width: 40vw;
-    height: 40vw;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.15;
-    z-index: 1;
-  }
-
-  .glow-1 {
-    top: -10%;
-    right: -10%;
-    background: var(--accent-blue);
-  }
-
-  .glow-2 {
-    bottom: -10%;
-    left: -10%;
-    background: var(--accent-violet);
-  }
-
-  <script>
-    const heroSection = document.querySelector('.hero');
-    const heroContent = document.querySelector('.hero-content') as HTMLElement;
-
-    if (heroSection && heroContent) {
-      const updateTilt = (clientX: number, clientY: number) => {
-        const { innerWidth, innerHeight } = window;
-        
-        // Disable on mobile if too intense
-        if(innerWidth < 768) return;
-
-        // Calculate percentage from center (-1 to 1)
-        const xPos = (clientX / innerWidth - 0.5) * 2;
-        const yPos = (clientY / innerHeight - 0.5) * 2;
-        
-        // Tilt values - Extreme 3D Effect for Container
-        const xOffset = yPos * 25; 
-        const yOffset = xPos * -25;
-        
-        // Separate Extreme Tilt for Title (Parallax)
-        const titleX = yPos * 50;
-        const titleY = xPos * -50;
-        const heroTitle = document.querySelector('.hero-title') as HTMLElement;
-
-        requestAnimationFrame(() => {
-          heroContent.style.transform = `perspective(1000px) rotateX(${xOffset}deg) rotateY(${yOffset}deg)`;
-          if(heroTitle) {
-             heroTitle.style.transform = `translateZ(100px) rotateX(${titleX}deg) rotateY(${titleY}deg)`;
-          }
-        });
-      };
-
-      heroSection.addEventListener('mousemove', (e: any) => {
-        updateTilt(e.clientX, e.clientY);
-      });
-      
-      heroSection.addEventListener('touchmove', (e: any) => {
-        if(e.touches.length > 0) {
-           // Prevent default scrolling only if needed, but here we want effect while scrolling
-           updateTilt(e.touches[0].clientX, e.touches[0].clientY);
-        }
-      }, { passive: true });
-      
-      heroSection.addEventListener('mouseleave', () => {
-        heroContent.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-        const heroTitle = document.querySelector('.hero-title') as HTMLElement;
-        if(heroTitle) heroTitle.style.transform = 'translateZ(100px) rotateX(0) rotateY(0)';
-      });
-    }
-
-    // Force animation trigger on mount
-    document.addEventListener('astro:page-load', () => {
-      const heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-actions');
-      heroElements.forEach(el => {
-        const element = el as HTMLElement;
-        element.style.animationPlayState = 'running';
-        element.classList.add('animate-in');
-      });
-    });
-
-    // Fallback
-    window.addEventListener('load', () => {
-      const heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-actions');
-      heroElements.forEach(el => {
-        el.classList.add('animate-in');
-      });
-    });
-  </script>
-
-  <!-- 3D Grid Floor -->
-  <div class="hero-footer-visuals">
-    <div class="cyber-grid"></div>
-    <div class="scroll-indicator">
-      <span>Scroll</span>
-      <div class="mouse-icon">
-        <div class="wheel"></div>
-      </div>
-    </div>
-  </div>
-
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -293,19 +264,18 @@ import Logo from './Logo.astro';
     }
   }
 
-  /* Animation initial state override - rely on JS for entry, but keep visible if JS fails (fallback) */
-  .hero-title, .hero-subtitle, .hero-actions {
-    /* If JS fails, we want them visible, but opacity 0 hides them. 
-       We rely on the animation to set opacity to 1. */
-     opacity: 1; /* Resetting to 1 to debug visibility issues, relying on animation to handle start state if class present */
-  }
-  
-  /* When JS adds this class, we hide triggers */
-  .hero-title.animate-in, .hero-subtitle.animate-in, .hero-actions.animate-in {
-     opacity: 0; /* Reset for animation */
+  .hero-title,
+  .hero-subtitle,
+  .hero-actions {
+    opacity: 1;
   }
 
-  /* Active class triggered by JS */
+  .hero-title.animate-in,
+  .hero-subtitle.animate-in,
+  .hero-actions.animate-in {
+    opacity: 0;
+  }
+
   .hero-title.animate-in {
     animation: revealText 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards 0.1s;
   }
@@ -318,7 +288,6 @@ import Logo from './Logo.astro';
     animation: fadeInUp 1s cubic-bezier(0.23, 1, 0.32, 1) forwards 0.7s;
   }
 
-  /* New Code Visual Styles */
   .code-visual-container {
     margin-top: 3rem;
     display: flex;
@@ -357,9 +326,15 @@ import Logo from './Logo.astro';
     border-radius: 50%;
   }
 
-  .dot.red { background: #ff5f56; }
-  .dot.yellow { background: #ffbd2e; }
-  .dot.green { background: #27c93f; }
+  .dot.red {
+    background: #ff5f56;
+  }
+  .dot.yellow {
+    background: #ffbd2e;
+  }
+  .dot.green {
+    background: #27c93f;
+  }
 
   .code-content {
     font-family: 'Fira Code', monospace;
@@ -375,12 +350,16 @@ import Logo from './Logo.astro';
     flex-direction: column;
     animation: scrollCode 8s linear infinite;
     will-change: transform;
-    transform: translateZ(0); /* Force GPU */
+    transform: translateZ(0);
   }
 
   @keyframes scrollCode {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-50%); } /* Scroll half way (duplicate content) */
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
   }
 
   .line {
@@ -390,65 +369,86 @@ import Logo from './Logo.astro';
     white-space: nowrap;
   }
 
-  .keyword { color: #c678dd; } /* Purple */
-  .variable { color: #e06c75; } /* Red */
-  .string { color: #98c379; } /* Green */
-  .function { color: #61afef; } /* Blue */
-  .comment { color: #5c6370; font-style: italic; }
+  .keyword {
+    color: #c678dd;
+  }
+  .variable {
+    color: #e06c75;
+  }
+  .string {
+    color: #98c379;
+  }
+  .function {
+    color: #61afef;
+  }
+  .comment {
+    color: #5c6370;
+    font-style: italic;
+  }
 
   @media (max-width: 768px) {
     .code-window {
       width: 100%;
       max-width: 300px;
     }
-    /* 3D tilt is disabled via JS on mobile, no need to override CSS which breaks entry animation */
-    /* Increase grid visibility on mobile to fill space */
     .cyber-grid {
-      opacity: 0.5 !important; 
+      opacity: 0.5 !important;
     }
     .hero {
-      min-height: 100dvh; /* Dynamic viewport height for mobile */
+      min-height: 100dvh;
     }
   }
 
-  /* Footer Visuals & Grid */
   .hero-footer-visuals {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 55vh; /* Increased height to be more visible */
+    height: 55vh;
     pointer-events: none;
-    z-index: 0; /* Lower z-index to stay behind content */
+    z-index: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
     padding-bottom: 2rem;
     perspective: 500px;
-    opacity: 0.8; /* Increased visibility */
+    opacity: 0.8;
   }
 
   .cyber-grid {
     position: absolute;
-    bottom: -20%; /* Moved up */
+    bottom: -20%;
     left: -50%;
     width: 200%;
-    /* Cyber Grid - Standard Lines */
-    background-image: 
+    background-image:
       linear-gradient(transparent 95%, rgba(6, 182, 212, 0.5) 95%),
       linear-gradient(90deg, transparent 95%, rgba(6, 182, 212, 0.5) 95%);
     background-size: 50px 50px;
     transform: rotateX(50deg);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 60%, black 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 60%, black 100%);
-    opacity: 0.5; /* Good visibility for grid */
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 60%,
+      black 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 60%,
+      black 100%
+    );
+    opacity: 0.5;
     animation: gridMove 20s linear infinite;
   }
 
   @keyframes gridMove {
-    0% { transform: rotateX(60deg) translateY(0); }
-    100% { transform: rotateX(60deg) translateY(40px); }
+    0% {
+      transform: rotateX(60deg) translateY(0);
+    }
+    100% {
+      transform: rotateX(60deg) translateY(40px);
+    }
   }
 
   .scroll-indicator {
@@ -470,7 +470,7 @@ import Logo from './Logo.astro';
   .mouse-icon {
     width: 26px;
     height: 40px;
-    border: 2px solid rgba(255,255,255,0.3);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     position: relative;
     display: flex;
@@ -487,7 +487,44 @@ import Logo from './Logo.astro';
   }
 
   @keyframes scrollWheel {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(15px); opacity: 0; }
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(15px);
+      opacity: 0;
+    }
+  }
+
+  .hero-bg-effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .glow {
+    position: absolute;
+    width: 40vw;
+    height: 40vw;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    z-index: 1;
+  }
+
+  .glow-1 {
+    top: -10%;
+    right: -10%;
+    background: var(--accent-blue);
+  }
+
+  .glow-2 {
+    bottom: -10%;
+    left: -10%;
+    background: var(--accent-violet);
   }
 </style>

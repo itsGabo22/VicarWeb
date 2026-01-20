@@ -40,7 +40,7 @@ const projects = [
       <!-- <div class="bg-image" style="background-image: url('images/bluevelvet.jpeg');"></div> 
        public\videos\background_BV.mp4-->
 
-      <video autoplay muted loop playsinline class='bg-video'>
+      <video muted loop playsinline preload='none' class='bg-video'>
         <source src='videos/background_BV.mp4' type='video/mp4' />
         <!-- Fallback image -->
         <img src='images/bluevelvet.jpeg' alt='Background' />
@@ -292,6 +292,36 @@ const projects = [
   );
 
   cards.forEach((card) => observer.observe(card));
+
+  // Visibility-aware Warp Speed Control
+  const projectsSection = document.getElementById('proyectos');
+  if (projectsSection) {
+    const visibilityObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting && isWarpActive) {
+            stopWarp();
+            // We need a way to know if it SHOULD restart when back in view
+            // Only restart if the current active card is 'warp'
+            (projectsSection as any)._wasWarpActive = true;
+          } else if (
+            entry.isIntersecting &&
+            (projectsSection as any)._wasWarpActive
+          ) {
+            const activeCard = document.querySelector(
+              '.project-card[data-index].active'
+            );
+            if (activeCard && activeCard.getAttribute('data-type') === 'warp') {
+              startWarp();
+            }
+            (projectsSection as any)._wasWarpActive = false;
+          }
+        });
+      },
+      { threshold: 0 }
+    );
+    visibilityObserver.observe(projectsSection);
+  }
 </script>
 
 <style>
