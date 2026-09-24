@@ -1,5 +1,11 @@
 ---
-import Logo from './Logo.astro';
+import { getCollection } from 'astro:content';
+
+// Cifras del proof strip calculadas desde los proyectos: siempre verídicas
+const projects = await getCollection('projects');
+const projectCount = projects.length;
+const ecommerceCount = projects.filter((p) => p.data.badge === 'E-commerce').length;
+const landingCount = projects.filter((p) => p.data.badge === 'Landing Page').length;
 ---
 
 <section class='hero'>
@@ -9,9 +15,10 @@ import Logo from './Logo.astro';
       Software que <span class='bg-gradient'>respira.</span>
     </h1>
     <p class='hero-subtitle'>
-      No hago webs genéricas. Construyo experiencias digitales de alta gama,
-      optimizadas con IA y enfocadas en la conversión.
+      No hago webs genéricas. Construyo tiendas online y landing pages de alta
+      gama, enfocadas en la conversión.
     </p>
+    <p class='hero-location'>Pasto, Nariño · Colombia</p>
     <div class='code-visual-container'>
       <div class='code-window'>
         <div class='window-header'>
@@ -25,16 +32,21 @@ import Logo from './Logo.astro';
               ><span class='keyword'>const</span>
               <span class='variable'>future</span> = <span class='keyword'
                 >await</span
-              > build({'{'}
-              tech: <span class='string'>'Astro'</span>, performance: <span
-                class='string'>'100/100'</span
-              >, design: <span class='string'>'Premium'</span>
-              {'}'});</span
+              > build({'{'}</span
             >
-            <span class='line'></span>
+            <span class='line'
+              >&nbsp;&nbsp;stack: <span class='string'>'Next.js'</span>,</span
+            >
+            <span class='line'
+              >&nbsp;&nbsp;backend: <span class='string'>'Supabase'</span>,</span
+            >
+            <span class='line'
+              >&nbsp;&nbsp;deploy: <span class='string'>'Vercel'</span>,</span
+            >
+            <span class='line'>{'}'});</span>
             <span class='line'
               ><span class='comment'
-                >// Ready to launch, Vicar's product...</span
+                >// {projectCount} proyectos en producción</span
               ></span
             >
             <span class='line'
@@ -46,6 +58,15 @@ import Logo from './Logo.astro';
         </div>
       </div>
     </div>
+
+    <ul class='proof-strip' aria-label='Proyectos entregados'>
+      <li><strong>{projectCount}</strong> proyectos en producción</li>
+      <li><strong>{ecommerceCount}</strong> e-commerce activos</li>
+      <li>
+        <strong>{landingCount}</strong>
+        {landingCount === 1 ? 'landing de servicios' : 'landings de servicios'}
+      </li>
+    </ul>
   </div>
 
   <div class='hero-bg-effects'>
@@ -57,7 +78,7 @@ import Logo from './Logo.astro';
   <div class='hero-footer-visuals'>
     <div class='cyber-grid'></div>
     <div class='scroll-indicator'>
-      <span>Scroll</span>
+      <span>Desliza</span>
       <div class='mouse-icon'>
         <div class='wheel'></div>
       </div>
@@ -382,8 +403,38 @@ import Logo from './Logo.astro';
     color: #61afef;
   }
   .comment {
-    color: #5c6370;
+    color: #7f8794; /* Contraste AA sobre la ventana oscura */
     font-style: italic;
+  }
+
+  .hero-location {
+    margin-top: -2rem;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+  }
+
+  .proof-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 2.5rem;
+    margin-top: 3rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .proof-strip strong {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-right: 0.35rem;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   @media (max-width: 768px) {
@@ -464,7 +515,7 @@ import Logo from './Logo.astro';
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: var(--text-secondary);
+    color: #d0d0d0; /* Con la opacidad del contenedor queda ~#939393 (contraste AA) */
   }
 
   .mouse-icon {

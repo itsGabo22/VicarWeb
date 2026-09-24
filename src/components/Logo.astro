@@ -6,6 +6,11 @@ interface Props {
 }
 
 const { className = '', showDevelopedBy = true, href = '/' } = Astro.props;
+const isExternal = href.startsWith('http');
+const baseLabel = showDevelopedBy ? 'Developed by VICAR' : 'VICAR';
+const label = isExternal
+  ? `${baseLabel}, GitHub (abre en una pestaña nueva)`
+  : `${baseLabel}, ir al inicio`;
 ---
 
 <div
@@ -14,13 +19,14 @@ const { className = '', showDevelopedBy = true, href = '/' } = Astro.props;
 >
   <a
     href={href}
-    target={href.startsWith('http') ? '_blank' : '_self'}
-    rel={href.startsWith('http') ? 'noopener' : ''}
+    target={isExternal ? '_blank' : '_self'}
+    rel={isExternal ? 'noopener' : undefined}
+    aria-label={label}
     style='text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 5px;'
   >
     {
       showDevelopedBy && (
-        <span style='font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: #888;'>
+        <span style='font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: #a0a0a0;'>
           Developed by
         </span>
       )
@@ -32,6 +38,7 @@ const { className = '', showDevelopedBy = true, href = '/' } = Astro.props;
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
       style='max-width: 140px;'
+      aria-hidden='true'
     >
       <defs>
         <linearGradient
