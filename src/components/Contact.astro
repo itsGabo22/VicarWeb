@@ -33,7 +33,7 @@
             </div>
             <span>vicardev2026@gmail.com</span>
           </a>
-          <a href='https://wa.me/573164172093' target='_blank' class='method'>
+          <a href='https://wa.me/573164172093' target='_blank' rel='noopener' class='method'>
             <div class='icon'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -55,6 +55,7 @@
           <a
             href='https://www.instagram.com/vicar.dev?igsh=MTF3Ynh5emh6NThlaQ=='
             target='_blank'
+            rel='noopener'
             class='method'
           >
             <div class='icon'>
@@ -84,6 +85,8 @@
         action='https://formspree.io/f/xlggelwg'
         method='POST'
         class='contact-form'
+        id='contact-form'
+        novalidate
       >
         <div class='form-group'>
           <label for='name'>Nombre</label>
@@ -92,8 +95,12 @@
             id='name'
             name='name'
             placeholder='Tu nombre'
+            autocomplete='name'
+            minlength='2'
             required
+            aria-describedby='name-error'
           />
+          <span class='field-error' id='name-error' aria-live='polite'></span>
         </div>
         <div class='form-group'>
           <label for='email'>Email</label>
@@ -102,8 +109,11 @@
             id='email'
             name='email'
             placeholder='tu@email.com'
+            autocomplete='email'
             required
+            aria-describedby='email-error'
           />
+          <span class='field-error' id='email-error' aria-live='polite'></span>
         </div>
         <div class='form-group'>
           <label for='message'>Proyecto</label>
@@ -112,11 +122,22 @@
             name='message'
             rows='4'
             placeholder='Cuéntame sobre tu idea...'
-            required></textarea>
+            minlength='10'
+            required
+            aria-describedby='message-error'></textarea>
+          <span class='field-error' id='message-error' aria-live='polite'></span>
         </div>
         <!-- Honeypot para evitar spam -->
-        <input type='text' name='_gotcha' style='display:none' />
+        <input
+          type='text'
+          name='_gotcha'
+          style='display:none'
+          tabindex='-1'
+          autocomplete='off'
+        />
+        <input type='hidden' name='_subject' value='Nuevo mensaje desde vicardev.digital' />
         <button type='submit' class='btn-submit'>Enviar Propuesta</button>
+        <p class='form-status' id='form-status' role='status' aria-live='polite'></p>
       </form>
     </div>
   </div>
@@ -148,6 +169,75 @@
       },
       { passive: true }
     );
+  }
+  /* --- Envío del formulario (Formspree vía fetch) --- */
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  if (form) {
+    const status = form.querySelector('#form-status') as HTMLElement;
+    const button = form.querySelector('.btn-submit') as HTMLButtonElement;
+    const fields = ['name', 'email', 'message'] as const;
+    const messages: Record<(typeof fields)[number], string> = {
+      name: 'Escribe tu nombre (mínimo 2 caracteres).',
+      email: 'Escribe un email válido, por ejemplo tu@email.com.',
+      message: 'Cuéntame un poco más sobre tu proyecto (mínimo 10 caracteres).',
+    };
+
+    const validateField = (name: (typeof fields)[number]) => {
+      const input = form.elements.namedItem(name) as HTMLInputElement;
+      const error = form.querySelector(`#${name}-error`) as HTMLElement;
+      input.value = input.value.trimStart();
+      const valid = input.checkValidity() && input.value.trim().length > 0;
+      input.setAttribute('aria-invalid', String(!valid));
+      error.textContent = valid ? '' : messages[name];
+      return valid;
+    };
+
+    fields.forEach((name) => {
+      const input = form.elements.namedItem(name) as HTMLInputElement;
+      input.addEventListener('blur', () => validateField(name));
+      input.addEventListener('input', () => {
+        if (input.getAttribute('aria-invalid') === 'true') validateField(name);
+      });
+    });
+
+    const setStatus = (text: string, state: 'ok' | 'error' | 'sending') => {
+      status.innerHTML = text;
+      status.dataset.state = state;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const results = fields.map(validateField);
+      if (results.includes(false)) {
+        const firstInvalid = fields[results.indexOf(false)];
+        (form.elements.namedItem(firstInvalid) as HTMLElement).focus();
+        setStatus('Revisa los campos marcados.', 'error');
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = 'Enviando...';
+      setStatus('', 'sending');
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        setStatus('¡Mensaje enviado! Te responderé pronto a tu email.', 'ok');
+      } catch {
+        setStatus(
+          'No se pudo enviar el mensaje. Inténtalo de nuevo o escríbeme por <a href="https://wa.me/573164172093" target="_blank" rel="noopener">WhatsApp</a>.',
+          'error'
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Enviar Propuesta';
+      }
+    });
   }
 </script>
 
@@ -259,7 +349,7 @@
   }
 
   .form-group {
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
   }
 
   .form-group label {
@@ -307,6 +397,47 @@
     text-transform: uppercase;
   }
 
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: wait;
+    transform: none;
+  }
+
+  .field-error {
+    display: block;
+    min-height: 1.2em;
+    margin: 0.4rem 0 0 0.5rem;
+    font-size: 0.85rem;
+    color: #f87171;
+  }
+
+  .form-group input[aria-invalid='true'],
+  .form-group textarea[aria-invalid='true'] {
+    border-color: #f87171;
+  }
+
+  .form-status {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .form-status:empty {
+    display: none;
+  }
+
+  .form-status[data-state='ok'] {
+    color: #4ade80;
+  }
+
+  .form-status[data-state='error'] {
+    color: #f87171;
+  }
+
+  .form-status a {
+    text-decoration: underline;
+  }
+
   .btn-submit:hover {
     transform: translateY(-5px);
     box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3);
@@ -325,6 +456,18 @@
       max-width: 100%;
       margin: 0 auto;
       overflow: hidden;
+    }
+    .contact-info,
+    .contact-form {
+      min-width: 0; /* Evita que el email desborde la columna y se recorte */
+    }
+    .method {
+      padding: 1rem;
+    }
+    .method span {
+      font-size: 0.9rem;
+      overflow-wrap: break-word;
+      min-width: 0;
     }
     .contact-methods {
       align-items: center; /* Center flex items */
