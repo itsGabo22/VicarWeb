@@ -35,11 +35,6 @@ const projects = [
       opacity: 0.6 -> Opacidad del overlay negro sobre el video (0 a 1).
     -->
     <div class='video-container' style='filter: blur(8px) brightness(0.6);'>
-      <!-- Reemplazar 'videos/bluevelvet-loop.mp4' con la ruta de tu video -->
-      <!-- Si no tienes el video aún, puedes descomentar la linea de bg-image abajo -->
-      <!-- <div class="bg-image" style="background-image: url('images/bluevelvet.jpeg');"></div> 
-       public\videos\background_BV.mp4-->
-
       <video muted loop playsinline preload='none' class='bg-video'>
         <source src='videos/background_BV.mp4' type='video/mp4' />
         <!-- Fallback image -->
@@ -233,7 +228,7 @@ const projects = [
     cancelAnimationFrame(animationId);
   }
 
-  /* --- Carousel Logic --- */
+  /* --- Carousel Logica  --- */
   const track = document.querySelector('.carousel-wrapper');
   const cards = document.querySelectorAll('.project-card');
   const dots = document.querySelectorAll('.indicator-dot');
@@ -293,7 +288,6 @@ const projects = [
 
   cards.forEach((card) => observer.observe(card));
 
-  // Visibility-aware Warp Speed Control
   const projectsSection = document.getElementById('proyectos');
   if (projectsSection) {
     const visibilityObserver = new IntersectionObserver(
@@ -301,8 +295,7 @@ const projects = [
         entries.forEach((entry) => {
           if (!entry.isIntersecting && isWarpActive) {
             stopWarp();
-            // We need a way to know if it SHOULD restart when back in view
-            // Only restart if the current active card is 'warp'
+
             (projectsSection as any)._wasWarpActive = true;
           } else if (
             entry.isIntersecting &&
@@ -365,7 +358,7 @@ const projects = [
   .video-container {
     width: 100%;
     height: 100%;
-    /* Transition for blur effect changes if needed dynamically */
+    /* Transición del efecto dinámicamente */
     transition: filter 0.5s ease;
   }
 
@@ -409,13 +402,13 @@ const projects = [
     scroll-snap-type: x mandatory;
     display: flex;
     align-items: center;
-    height: 600px; /* Limit height for better desktop feel */
+    height: 600px; /* Límite para mejor optimización*/
   }
 
   .projects-track {
     display: flex;
     gap: 4rem;
-    padding: 0 max(2rem, calc(50vw - 400px)); /* Center the 800px card */
+    padding: 0 max(2rem, calc(50vw - 400px));
   }
 
   .project-card {
@@ -551,15 +544,14 @@ const projects = [
     .projects-track {
       display: flex;
       gap: 1.5rem;
-      /* Calculate width to ensure it exceeds viewport for scrolling */
-      /* 2 cards at 85vw each + gap + padding = wider than 100vw */
+
       width: auto;
       padding: 0;
     }
     .carousel-wrapper {
       width: 100vw;
-      margin-left: calc(-50vw + 50%); /* Full width breakout */
-      padding: 2rem 7.5vw; /* Side padding for first card centering */
+      margin-left: calc(-50vw + 50%);
+      padding: 2rem 7.5vw;
       height: auto;
       overflow-x: scroll;
       overflow-y: hidden;
@@ -567,10 +559,10 @@ const projects = [
       scroll-snap-type: x mandatory;
       display: flex;
       justify-content: flex-start;
-      scrollbar-width: none; /* Hide scrollbar */
+      scrollbar-width: none; /* Esconder scrollbar */
     }
     .carousel-wrapper::-webkit-scrollbar {
-      display: none; /* Hide scrollbar for webkit */
+      display: none; /* Esconder scrollbar para webkit */
     }
 
     /* Center text on mobile */
