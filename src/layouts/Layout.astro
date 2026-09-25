@@ -6,7 +6,7 @@ interface Props {
 
 const {
   title,
-  description = 'VICAR desarrolla tiendas online (e-commerce) y landing pages de alta gama en Pasto, Nariño. Proyectos en producción con Next.js, Supabase y Firebase.',
+  description = 'VICAR desarrolla tiendas online (e-commerce) y landing pages de alta gama en Pasto, Nariño. Proyectos en producción con Next.js, Supabase y Vercel.',
 } = Astro.props;
 import { ViewTransitions } from 'astro:transitions';
 import '@fontsource/inter/latin-400.css';
@@ -15,6 +15,9 @@ import '@fontsource/inter/latin-800.css';
 import '@fontsource/syne/latin-700.css';
 import '@fontsource/syne/latin-800.css';
 import '../styles/global.css';
+// Fuentes visibles en el hero: se precargan para evitar el salto de layout (CLS) al cambiar de fuente
+import syne800 from '@fontsource/syne/files/syne-latin-800-normal.woff2?url';
+import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
 import InteractiveBackground from '../components/InteractiveBackground.astro';
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -52,6 +55,8 @@ const jsonLd = {
     <meta name='viewport' content='width=device-width, initial-scale=1' />
     <title>{title}</title>
     <meta name='description' content={description} />
+    <link rel='preload' href={syne800} as='font' type='font/woff2' crossorigin />
+    <link rel='preload' href={inter400} as='font' type='font/woff2' crossorigin />
     <link rel='canonical' href={canonical} />
     <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
     <link rel='sitemap' href='/sitemap-index.xml' />

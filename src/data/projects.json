@@ -67,24 +67,20 @@
     "order": 4,
     "title": "Blue Velvet",
     "badge": "E-commerce",
-    "description": "Catálogo de calzado y moda con carrito de compras y cierre de pedido asistido por WhatsApp.",
+    "description": "Tienda online de tenis y calzado de marca con catálogo por marcas, carrito y pedidos por WhatsApp.",
     "features": [
-      "Carrito con pedido enviado por WhatsApp",
-      "Selección de talla y guía de tallas",
-      "Buscador de zapatos y marcas",
-      "Reseñas de clientes con moderación previa"
+      "Catálogo de 12 marcas con filtros por colección y precio",
+      "Selección de talla con guía de tallas",
+      "Carrito con cupones y solicitud de pedido por WhatsApp",
+      "Buscador que tolera errores de ortografía"
     ],
-    "stack": ["JavaScript", "Firebase", "Firestore"],
+    "stack": ["Next.js", "Supabase", "Vercel"],
     "image": {
       "src": "/images/projects/bluevelvet.webp",
-      "alt": "Página de inicio de Blue Velvet con un par de zapatillas sobre un pedestal y el botón Ver catálogo",
+      "alt": "Página de inicio de Blue Velvet con el título Bienvenidos Blue Velvet y el botón Explorar colección",
       "width": 1440,
       "height": 900
     },
-    "url": "https://bluevelvet0.com",
-    "bgVideo": {
-      "src": "/videos/background_BV.mp4",
-      "poster": "/images/projects/bluevelvet-poster.webp"
-    }
+    "url": "https://bluevelvet0.com"
   }
 ]
