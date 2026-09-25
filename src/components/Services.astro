@@ -48,7 +48,14 @@ const services = [
                 />
               </svg>
             </div>
-            <h3>{service.title}</h3>
+            <h3>
+              {service.title.split(' ').map((word, i) => (
+                <>
+                  {i > 0 && ' '}
+                  <span class='word'>{word}</span>
+                </>
+              ))}
+            </h3>
             <p>{service.description}</p>
             <a href={`#caso-${service.caseId}`} class='case-link'>
               Ver caso: {service.caseTitle} →
@@ -165,6 +172,7 @@ const services = [
     width: 100%; /* Ensure card takes full available width in its grid cell */
     max-width: 400px; /* Prevent cards from getting too wide */
     margin-inline: auto; /* Center card within grid cell */
+    container-type: inline-size; /* El título escala con el ancho de la tarjeta */
   }
 
   .service-card:hover {
@@ -177,7 +185,12 @@ const services = [
     .grid {
       grid-template-columns: 1fr;
       justify-content: center;
-      padding: 0 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .service-card {
+      padding: 2.5rem 1.25rem;
     }
   }
 
@@ -212,9 +225,18 @@ const services = [
 
   .service-card h3 {
     font-size: 1.5rem;
+    /* 'E-commerce' mide ~10.4 veces el tamaño de fuente en Syne 800:
+       9.4cqi deja que la palabra más larga quepa en cualquier ancho de tarjeta */
+    font-size: clamp(0.85rem, 9.4cqi, 1.5rem);
     margin-bottom: 1rem;
     position: relative;
     z-index: 1;
+  }
+
+  /* Las palabras pueden pasar de línea entre sí, pero nunca se parten
+     (evita 'E-' / 'commerce') */
+  .service-card h3 .word {
+    white-space: nowrap;
   }
 
   .service-card p {
