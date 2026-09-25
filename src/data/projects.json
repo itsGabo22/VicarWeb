@@ -1,0 +1,90 @@
+[
+  {
+    "id": "brisal",
+    "order": 1,
+    "title": "Brisal by Salvador",
+    "badge": "E-commerce",
+    "description": "Tienda online de joyería en acero, rodio, oro laminado y plata 925, con canal mayorista propio.",
+    "features": [
+      "Portal mayorista con registro y aprobación de cuentas",
+      "Filtros por categoría, material, colección y precio",
+      "Variantes por color y presentación con precio propio",
+      "Carrito de compras y consulta directa por WhatsApp"
+    ],
+    "stack": ["Next.js", "Supabase", "Vercel"],
+    "image": {
+      "src": "/images/projects/brisal.webp",
+      "alt": "Página de inicio de Brisal by Salvador con la nueva colección de joyería en baño de oro",
+      "width": 1440,
+      "height": 900
+    },
+    "url": "https://brisal.com.co"
+  },
+  {
+    "id": "carlin",
+    "order": 2,
+    "title": "Carlin Cosméticos",
+    "badge": "E-commerce",
+    "description": "Tienda multimarca de maquillaje y cuidado personal con precios para mayoristas y distribuidores.",
+    "features": [
+      "Dos niveles de compra al por mayor: mayorista y distribuidor",
+      "Catálogo de 13 marcas con página propia por marca",
+      "Filtros por categoría y marca, con orden por precio",
+      "Registro e inicio de sesión para mayoristas"
+    ],
+    "stack": ["Next.js", "Supabase", "Vercel"],
+    "image": {
+      "src": "/images/projects/carlin.webp",
+      "alt": "Página de inicio de Carlin Cosméticos con buscador, categorías y productos de cuidado capilar",
+      "width": 1440,
+      "height": 900
+    },
+    "url": "https://carlincosmeticos.com"
+  },
+  {
+    "id": "electrotech",
+    "order": 3,
+    "title": "ElectroTech",
+    "badge": "Landing Page",
+    "description": "Landing de servicios para una empresa de electromecánica y automatización industrial, enfocada en cotizaciones.",
+    "features": [
+      "Formulario de cotización con autorización de datos",
+      "SEO local con datos estructurados para Pasto, Nariño",
+      "Preguntas frecuentes y proceso de trabajo en 4 pasos",
+      "Contacto directo por WhatsApp"
+    ],
+    "stack": ["Next.js", "Vercel"],
+    "image": {
+      "src": "/images/projects/electrotech.webp",
+      "alt": "Página de inicio de ElectroTech con un tablero de transferencia automática y botón de cotizar",
+      "width": 1440,
+      "height": 900
+    },
+    "url": "https://electrotechpasto.com"
+  },
+  {
+    "id": "bluevelvet",
+    "order": 4,
+    "title": "Blue Velvet",
+    "badge": "E-commerce",
+    "description": "Catálogo de calzado y moda con carrito de compras y cierre de pedido asistido por WhatsApp.",
+    "features": [
+      "Carrito con pedido enviado por WhatsApp",
+      "Selección de talla y guía de tallas",
+      "Buscador de zapatos y marcas",
+      "Reseñas de clientes con moderación previa"
+    ],
+    "stack": ["JavaScript", "Firebase", "Firestore"],
+    "image": {
+      "src": "/images/projects/bluevelvet.webp",
+      "alt": "Página de inicio de Blue Velvet con un par de zapatillas sobre un pedestal y el botón Ver catálogo",
+      "width": 1440,
+      "height": 900
+    },
+    "url": "https://bluevelvet0.com",
+    "bgVideo": {
+      "src": "/videos/background_BV.mp4",
+      "poster": "/images/projects/bluevelvet-poster.webp"
+    }
+  }
+]

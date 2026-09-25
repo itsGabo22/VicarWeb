@@ -1,22 +1,28 @@
 ---
 const services = [
   {
-    title: 'Landing Pages',
-    description:
-      'Conversión máxima con diseños que guían al usuario y tecnologías que cargan al instante.',
-    icon: 'M13 10V3L4 14h7v7l9-11h-7z',
-  },
-  {
     title: 'E-commerce',
     description:
-      'Tiendas online robustas, escalables y visualmente impactantes que elevan tu marca.',
+      'Tiendas online con catálogo por categorías, filtros, variantes de producto, carrito y pedidos por WhatsApp.',
     icon: 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z',
+    caseId: 'brisal',
+    caseTitle: 'Brisal by Salvador',
   },
   {
-    title: 'IA Optimization',
+    title: 'Landing Pages',
     description:
-      'Integración de IA para automatizar flujos y optimizar el rendimiento del software.',
-    icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z',
+      'Páginas de servicios con SEO local, formulario de cotización, preguntas frecuentes y contacto directo por WhatsApp.',
+    icon: 'M13 10V3L4 14h7v7l9-11h-7z',
+    caseId: 'electrotech',
+    caseTitle: 'ElectroTech',
+  },
+  {
+    title: 'Portales Mayoristas',
+    description:
+      'Registro y acceso para mayoristas y distribuidores, con niveles de compra y aprobación de cuentas.',
+    icon: 'M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z',
+    caseId: 'carlin',
+    caseTitle: 'Carlin Cosméticos',
   },
 ];
 ---
@@ -44,6 +50,9 @@ const services = [
             </div>
             <h3>{service.title}</h3>
             <p>{service.description}</p>
+            <a href={`#caso-${service.caseId}`} class='case-link'>
+              Ver caso: {service.caseTitle} →
+            </a>
           </div>
         ))
       }
@@ -51,18 +60,25 @@ const services = [
   </div>
 </section>
 
-<!-- Vanta.js Scripts -->
-<script
-  is:inline
-  src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js'
-></script>
-<script
-  is:inline
-  src='https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js'
-></script>
-
 <script>
-  // Lazy Initialize Vanta Net Effect
+  // Lazy Initialize Vanta Net Effect: three.js y Vanta se descargan solo al llegar a la sección
+  const loadScript = (src: string) =>
+    new Promise<void>((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => resolve();
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+
+  let vantaLoading: Promise<void> | null = null;
+  const loadVanta = () =>
+    (vantaLoading ??= loadScript(
+      'https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js'
+    ).then(() =>
+      loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js')
+    ));
+
   // @ts-ignore
   document.addEventListener('astro:page-load', () => {
     const servicesSection = document.getElementById('servicios');
@@ -73,25 +89,27 @@ const services = [
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              // @ts-ignore
-              if (window.VANTA && !vantaEffect) {
+              loadVanta().then(() => {
                 // @ts-ignore
-                vantaEffect = window.VANTA.NET({
-                  el: '#servicios',
-                  mouseControls: true,
-                  touchControls: true,
-                  gyroControls: false,
-                  minHeight: 200.0,
-                  minWidth: 200.0,
-                  scale: 1.0,
-                  scaleMobile: 1.0,
-                  color: 0x2563eb,
-                  backgroundColor: 0x050505,
-                  points: 12.0,
-                  maxDistance: 22.0,
-                  spacing: 18.0,
-                });
-              }
+                if (window.VANTA && !vantaEffect) {
+                  // @ts-ignore
+                  vantaEffect = window.VANTA.NET({
+                    el: '#servicios',
+                    mouseControls: true,
+                    touchControls: true,
+                    gyroControls: false,
+                    minHeight: 200.0,
+                    minWidth: 200.0,
+                    scale: 1.0,
+                    scaleMobile: 1.0,
+                    color: 0x2563eb,
+                    backgroundColor: 0x050505,
+                    points: 12.0,
+                    maxDistance: 22.0,
+                    spacing: 18.0,
+                  });
+                }
+              }).catch(() => {});
             } else {
               // Optional: Destroy when not visible to save memory
               // but for Vanta sometimes it's better to just keep it once initialized
@@ -205,5 +223,19 @@ const services = [
     line-height: 1.6;
     position: relative;
     z-index: 1;
+  }
+
+  .case-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    position: relative;
+    z-index: 1;
+  }
+
+  .case-link:hover {
+    color: white;
   }
 </style>

@@ -1,123 +1,139 @@
 ---
-const projects = [
-  {
-    id: 'bluevelvet',
-    title: 'Blue Velvet',
-    category: 'E-commerce Premium',
-    description:
-      'Plataforma de moda de alta gama con enfoque en la experiencia de usuario y conversiones optimizadas.',
-    image: 'images/bluevelvet.jpeg',
-    tags: ['Node.js', 'Firebase', 'JS', 'UI/UX'],
-    link: 'https://bluevelvet0.com',
-    type: 'static',
-  },
-  {
-    id: 'comingsoon',
-    title: 'Próximamente',
-    category: 'Futuros Proyectos',
-    description:
-      'Nuevas experiencias digitales de alta gama están en camino. Este espacio pronto será ocupado por software que respira.',
-    image:
-      'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800',
-    tags: ['VICAR', 'Digital Design'],
-    isComingSoon: true,
-    type: 'warp',
-  },
-];
+import { getCollection } from 'astro:content';
+
+// Los proyectos viven en src/data/projects.json (ver src/content.config.ts)
+const projects = (await getCollection('projects'))
+  .map((entry) => ({ id: entry.id, ...entry.data }))
+  .sort((a, b) => a.order - b.order);
 ---
 
 <section id='proyectos' class='projects'>
-  <!-- Dynamic Backgrounds -->
-  <div class='bg-layer active' id='bg-bluevelvet'>
-    <!-- 
-      MODIFICAR AQUI EL EFECTO:
-      filter: blur(8px) -> Aumenta el numero pixeles para más borroso, disminuye para mas nitido.
-      opacity: 0.6 -> Opacidad del overlay negro sobre el video (0 a 1).
-    -->
-    <div class='video-container' style='filter: blur(8px) brightness(0.6);'>
-      <!-- Reemplazar 'videos/bluevelvet-loop.mp4' con la ruta de tu video -->
-      <!-- Si no tienes el video aún, puedes descomentar la linea de bg-image abajo -->
-      <!-- <div class="bg-image" style="background-image: url('images/bluevelvet.jpeg');"></div> 
-       public\videos\background_BV.mp4-->
-
-      <video muted loop playsinline preload='none' class='bg-video'>
-        <source src='videos/background_BV.mp4' type='video/mp4' />
-        <!-- Fallback image -->
-        <img src='images/bluevelvet.jpeg' alt='Background' />
-      </video>
-    </div>
-  </div>
-
-  <div class='bg-layer' id='bg-warp'>
-    <canvas id='warp-canvas'></canvas>
-  </div>
+  <!-- Fondos dinámicos: uno por proyecto, se activa el de la tarjeta visible -->
+  {
+    projects.map((project, index) => (
+      <div
+        class={`bg-layer ${index === 0 ? 'active' : ''}`}
+        data-bg-index={index}
+        aria-hidden='true'
+      >
+        <!--
+          MODIFICAR AQUI EL EFECTO:
+          blur(8px) -> Aumenta el numero de pixeles para más borroso, disminuye para más nítido.
+          brightness(0.6) -> Oscurece el fondo (0 a 1).
+        -->
+        <div class='video-container' style='filter: blur(8px) brightness(0.6);'>
+          {project.bgVideo ? (
+            <video
+              muted
+              loop
+              playsinline
+              preload='none'
+              poster={project.bgVideo.poster}
+              class='bg-video'
+            >
+              <source src={project.bgVideo.src} type='video/mp4' />
+            </video>
+          ) : (
+            <img
+              src={project.image.src}
+              alt=''
+              width={project.image.width}
+              height={project.image.height}
+              loading='lazy'
+              decoding='async'
+              class='bg-image'
+            />
+          )}
+        </div>
+      </div>
+    ))
+  }
 
   <div class='container content-wrapper'>
     <div class='header'>
       <h2 class='section-title'>
         Casos de <span class='bg-gradient'>Éxito</span>
       </h2>
-      <p class='section-desc'>Explorando el estándar VICAR.</p>
+      <p class='section-desc'>
+        {projects.length} proyectos en producción. Explorando el estándar VICAR.
+      </p>
     </div>
 
     <div class='carousel-wrapper'>
       <div class='projects-track'>
         {
           projects.map((project, index) => (
-            <div
-              class={`project-card ${project.isComingSoon ? 'coming-soon' : ''}`}
-              data-type={project.type}
+            <article
+              class='project-card'
+              id={`caso-${project.id}`}
               data-index={index}
             >
               <div class='image-container'>
-                <img src={project.image} alt={project.title} loading='lazy' />
+                <img
+                  src={project.image.src}
+                  alt={project.image.alt}
+                  width={project.image.width}
+                  height={project.image.height}
+                  loading='lazy'
+                  decoding='async'
+                />
                 <div class='overlay'>
-                  <span class='category'>{project.category}</span>
+                  <span class='category'>{project.badge}</span>
                 </div>
               </div>
               <div class='card-content'>
                 <h3>{project.title}</h3>
                 <p>{project.description}</p>
-                <div class='tags'>
-                  {project.tags.map((tag) => (
+                <ul class='features'>
+                  {project.features.map((feature) => (
+                    <li>{feature}</li>
+                  ))}
+                </ul>
+                <div class='tags' aria-label='Tecnologías'>
+                  {project.stack.map((tag) => (
                     <span>{tag}</span>
                   ))}
                 </div>
-                {project.link && (
-                  <a href={project.link} target='_blank' class='project-link'>
-                    Visitar Sitio
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      width='16'
-                      height='16'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      stroke='currentColor'
-                      stroke-width='2'
-                      stroke-linecap='round'
-                      stroke-linejoin='round'
-                    >
-                      <path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6' />
-                      <polyline points='15 3 21 3 21 9' />
-                      <line x1='10' y1='14' x2='21' y2='3' />
-                    </svg>
-                  </a>
-                )}
+                <a
+                  href={project.url}
+                  target='_blank'
+                  rel='noopener'
+                  class='project-link'
+                >
+                  Visitar sitio
+                  <span class='sr-only'>de {project.title} (abre en una pestaña nueva)</span>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='16'
+                    height='16'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    stroke-width='2'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                    aria-hidden='true'
+                  >
+                    <path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6' />
+                    <polyline points='15 3 21 3 21 9' />
+                    <line x1='10' y1='14' x2='21' y2='3' />
+                  </svg>
+                </a>
               </div>
-            </div>
+            </article>
           ))
         }
       </div>
     </div>
 
-    <!-- Indicators -->
+    <!-- Indicadores -->
     <div class='indicators'>
       {
-        projects.map((_, index) => (
+        projects.map((project, index) => (
           <button
             class={`indicator-dot ${index === 0 ? 'active' : ''}`}
             data-index={index}
-            aria-label={`Ir al slide ${index + 1}`}
+            aria-label={`Ver ${project.title}`}
           />
         ))
       }
@@ -126,125 +142,41 @@ const projects = [
 </section>
 
 <script>
-  /* --- Warp Speed Effect --- */
-  const canvas = document.getElementById('warp-canvas') as HTMLCanvasElement;
-  const ctx = canvas ? canvas.getContext('2d') : null;
-
-  let animationId: number;
-  let isWarpActive = false;
-
-  // Resize canvas
-  function resizeCanvas() {
-    if (canvas) {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  const stars: Star[] = [];
-  const STAR_COUNT = 400; // More density
-  const SPEED = 12; // Lower speed for more fluidity
-
-  class Star {
-    x: number;
-    y: number;
-    z: number;
-    pz: number;
-
-    constructor() {
-      // Initialize with default values to satisfy TypeScript
-      this.x = 0;
-      this.y = 0;
-      this.z = 0;
-      this.pz = 0;
-      this.reset(true);
-    }
-
-    reset(initial = false) {
-      if (!canvas) return;
-      this.x = (Math.random() * 2 - 1) * canvas.width;
-      this.y = (Math.random() * 2 - 1) * canvas.height;
-      this.z = Math.random() * canvas.width;
-      this.pz = this.z;
-      if (!initial) this.z = canvas.width; // Respawn far away
-    }
-
-    update() {
-      this.z -= SPEED;
-      if (this.z <= 0) this.reset();
-    }
-
-    draw() {
-      if (!canvas || !ctx) return;
-
-      const cx = canvas.width / 2;
-      const cy = canvas.height / 2;
-
-      const x = (this.x / this.z) * 100 + cx;
-      const y = (this.y / this.z) * 100 + cy;
-
-      const px = (this.x / this.pz) * 100 + cx;
-      const py = (this.y / this.pz) * 100 + cy;
-
-      this.pz = this.z;
-
-      if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) return;
-
-      const size = (1 - this.z / canvas.width) * 4;
-      const alpha = 1 - this.z / canvas.width;
-
-      ctx.beginPath();
-      // Trail effect
-      ctx.strokeStyle = `rgba(100, 200, 255, ${alpha})`;
-      ctx.lineWidth = size;
-      ctx.moveTo(px, py);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-    }
-  }
-
-  // Init stars
-  for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
-
-  function animateWarp() {
-    if (!isWarpActive || !canvas || !ctx) return;
-
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // Smoother trails (more opacity persistence)
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    stars.forEach((star) => {
-      star.update();
-      star.draw();
-    });
-
-    animationId = requestAnimationFrame(animateWarp);
-  }
-
-  function startWarp() {
-    if (isWarpActive) return;
-    isWarpActive = true;
-    animateWarp();
-  }
-
-  function stopWarp() {
-    isWarpActive = false;
-    cancelAnimationFrame(animationId);
-  }
-
-  /* --- Carousel Logic --- */
+  /* --- Carousel Logica --- */
+  const projectsSection = document.getElementById('proyectos');
   const track = document.querySelector('.carousel-wrapper');
-  const cards = document.querySelectorAll('.project-card');
-  const dots = document.querySelectorAll('.indicator-dot');
-  const bgBlueVelvet = document.getElementById('bg-bluevelvet');
-  const bgWarp = document.getElementById('bg-warp');
+  const cards = document.querySelectorAll<HTMLElement>('.project-card');
+  const dots = document.querySelectorAll<HTMLElement>('.indicator-dot');
+  const layers = document.querySelectorAll<HTMLElement>('.bg-layer');
+
+  let activeIndex = 0;
+  let sectionVisible = false;
+
+  // Solo reproduce el video del fondo activo y solo si la sección está en pantalla
+  function syncVideos() {
+    layers.forEach((layer, i) => {
+      const video = layer.querySelector('video');
+      if (!video) return;
+      if (i === activeIndex && sectionVisible) {
+        video.play().catch(() => {});
+      } else if (!video.paused) {
+        video.pause();
+      }
+    });
+  }
+
+  function setActive(index: number) {
+    activeIndex = index;
+    dots.forEach((d, i) => d.classList.toggle('active', i === index));
+    layers.forEach((l, i) => l.classList.toggle('active', i === index));
+    syncVideos();
+  }
 
   const observer = new IntersectionObserver(
     (entries) => {
-      // Find the entry with the highest intersection ratio
+      // La tarjeta con mayor área visible es la activa
       let maxRatio = 0;
-      let activeEntry: any = null; // Forced 'any' to silence unresolved TS error
+      let activeEntry: IntersectionObserverEntry | null = null;
 
       entries.forEach((entry) => {
         if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
@@ -254,35 +186,8 @@ const projects = [
       });
 
       if (activeEntry && maxRatio > 0.5) {
-        const indexStr = activeEntry.target.getAttribute('data-index');
-        if (!indexStr) return;
-
-        const index = parseInt(indexStr);
-        const type = activeEntry.target.getAttribute('data-type');
-
-        // Update dots
-        dots.forEach((d) => d.classList.remove('active'));
-        if (dots[index]) dots[index].classList.add('active');
-
-        // Update Backgrounds
-        if (type === 'static' && bgBlueVelvet && bgWarp) {
-          bgBlueVelvet.style.opacity = '1';
-          bgWarp.style.opacity = '0';
-          stopWarp();
-          // Ensure video plays if available
-          const video = bgBlueVelvet.querySelector('video');
-          if (video) {
-            video.play().catch(() => {});
-          }
-        } else if (type === 'warp' && bgBlueVelvet && bgWarp) {
-          bgBlueVelvet.style.opacity = '0';
-          bgWarp.style.opacity = '1';
-          startWarp();
-          const video = bgBlueVelvet.querySelector('video');
-          if (video && !video.paused) {
-            video.pause();
-          }
-        }
+        const indexStr = (activeEntry as IntersectionObserverEntry).target.getAttribute('data-index');
+        if (indexStr) setActive(parseInt(indexStr));
       }
     },
     {
@@ -293,29 +198,18 @@ const projects = [
 
   cards.forEach((card) => observer.observe(card));
 
-  // Visibility-aware Warp Speed Control
-  const projectsSection = document.getElementById('proyectos');
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      cards[i]?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    });
+  });
+
   if (projectsSection) {
     const visibilityObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting && isWarpActive) {
-            stopWarp();
-            // We need a way to know if it SHOULD restart when back in view
-            // Only restart if the current active card is 'warp'
-            (projectsSection as any)._wasWarpActive = true;
-          } else if (
-            entry.isIntersecting &&
-            (projectsSection as any)._wasWarpActive
-          ) {
-            const activeCard = document.querySelector(
-              '.project-card[data-index].active'
-            );
-            if (activeCard && activeCard.getAttribute('data-type') === 'warp') {
-              startWarp();
-            }
-            (projectsSection as any)._wasWarpActive = false;
-          }
+          sectionVisible = entry.isIntersecting;
+          syncVideos();
         });
       },
       { threshold: 0 }
@@ -365,15 +259,8 @@ const projects = [
   .video-container {
     width: 100%;
     height: 100%;
-    /* Transition for blur effect changes if needed dynamically */
+    /* Transición del efecto dinámicamente */
     transition: filter 0.5s ease;
-  }
-
-  #warp-canvas {
-    width: 100%;
-    height: 100%;
-    background: black;
-    will-change: transform;
   }
 
   .content-wrapper {
@@ -390,6 +277,10 @@ const projects = [
     font-size: clamp(2.5rem, 5vw, 4rem);
     margin-bottom: 0.5rem;
     text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .section-desc {
+    color: var(--text-secondary);
   }
 
   .bg-gradient {
@@ -409,19 +300,23 @@ const projects = [
     scroll-snap-type: x mandatory;
     display: flex;
     align-items: center;
-    height: 600px; /* Limit height for better desktop feel */
+    height: 620px; /* Límite para mejor optimización*/
+  }
+
+  .carousel-wrapper::-webkit-scrollbar {
+    display: none;
   }
 
   .projects-track {
     display: flex;
     gap: 4rem;
-    padding: 0 max(2rem, calc(50vw - 400px)); /* Center the 800px card */
+    padding: 0 max(2rem, calc(50vw - 440px)); /* Centra la tarjeta de 880px */
   }
 
   .project-card {
-    width: 800px;
+    width: 880px;
     max-width: 90vw;
-    height: 450px;
+    height: 520px;
     flex-shrink: 0;
     background: rgba(13, 13, 13, 0.85);
     backdrop-filter: blur(20px);
@@ -429,19 +324,19 @@ const projects = [
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
     scroll-snap-align: center;
+    scroll-margin-top: 7rem; /* Compensa la barra fija al llegar por ancla */
     display: flex;
     flex-direction: row;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     transition: transform 0.6s ease;
   }
 
-  /* Active card effect (via scroll snap centering implicity, usually scale comes from intersection but simple transform here works) */
   .project-card:hover {
     transform: scale(1.02);
   }
 
   .image-container {
-    width: 50%;
+    width: 45%;
     position: relative;
   }
 
@@ -449,11 +344,12 @@ const projects = [
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center top;
   }
 
   .card-content {
-    width: 50%;
-    padding: 3rem;
+    width: 55%;
+    padding: 2.5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -474,23 +370,57 @@ const projects = [
 
   .card-content h3 {
     font-size: 1.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     line-height: 1.1;
   }
 
   .card-content p {
     color: var(--text-secondary);
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
     /* Prevent overflow on mobile */
     word-break: break-word;
   }
 
+  .features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .features li {
+    position: relative;
+    padding-left: 1.4rem;
+  }
+
+  .features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45em;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+  }
+
   .tags {
     display: flex;
-    gap: 0.8rem;
-    margin-bottom: 2rem;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
     flex-wrap: wrap;
+  }
+
+  .tags span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    border: 1px solid rgba(6, 182, 212, 0.4);
+    color: var(--accent-cyan);
   }
 
   .project-link {
@@ -498,8 +428,20 @@ const projects = [
     align-items: center;
     gap: 0.5rem;
     font-weight: 700;
-    margin-top: auto;
     color: white;
+  }
+
+  .project-link:hover {
+    color: var(--accent-cyan);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   .indicators {
@@ -548,18 +490,20 @@ const projects = [
     .image-container {
       height: 200px;
     }
+    .card-content {
+      padding: 1.75rem;
+    }
     .projects-track {
       display: flex;
       gap: 1.5rem;
-      /* Calculate width to ensure it exceeds viewport for scrolling */
-      /* 2 cards at 85vw each + gap + padding = wider than 100vw */
+
       width: auto;
       padding: 0;
     }
     .carousel-wrapper {
       width: 100vw;
-      margin-left: calc(-50vw + 50%); /* Full width breakout */
-      padding: 2rem 7.5vw; /* Side padding for first card centering */
+      margin-left: calc(-50vw + 50%);
+      padding: 2rem 7.5vw;
       height: auto;
       overflow-x: scroll;
       overflow-y: hidden;
@@ -567,10 +511,8 @@ const projects = [
       scroll-snap-type: x mandatory;
       display: flex;
       justify-content: flex-start;
-      scrollbar-width: none; /* Hide scrollbar */
-    }
-    .carousel-wrapper::-webkit-scrollbar {
-      display: none; /* Hide scrollbar for webkit */
+      scrollbar-width: none; /* Esconder scrollbar */
+      align-items: stretch;
     }
 
     /* Center text on mobile */

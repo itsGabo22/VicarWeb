@@ -7,7 +7,7 @@ import Contact from '../components/Contact.astro';
 import Logo from '../components/Logo.astro';
 ---
 
-<Layout title='VICAR | Software que respira'>
+<Layout title='VICAR | E-commerce y Landing Pages en Pasto, Nariño'>
 	<nav class='navbar'>
 		<div class='container nav-content'>
 			<Logo className='nav-logo' showDevelopedBy={false} href='/' />
@@ -29,6 +29,7 @@ import Logo from '../components/Logo.astro';
 	<footer class='footer'>
 		<div class='container footer-content'>
 			<Logo showDevelopedBy={true} href='https://github.com/itsGabo22' />
+			<p class='footer-location'>Pasto, Nariño · Colombia</p>
 			<p>© {new Date().getFullYear()} VICAR. Hecho para destacar.</p>
 		</div>
 	</footer>
@@ -94,6 +95,13 @@ import Logo from '../components/Logo.astro';
 	.footer p {
 		color: var(--text-secondary);
 		font-size: 0.9rem;
+	}
+
+	.footer .footer-location {
+		margin-bottom: -1.25rem;
+		text-transform: uppercase;
+		letter-spacing: 2px;
+		font-size: 0.8rem;
 	}
 
 	@media (max-width: 768px) {
